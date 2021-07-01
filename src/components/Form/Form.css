@@ -1,0 +1,10 @@
+.testf{
+    width: 170px;
+    height: 100px;
+    display: flex;
+    flex-direction: row;
+}
+#form{
+    display: inline-grid;
+    grid-template-columns: auto auto auto;
+}

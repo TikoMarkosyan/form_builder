@@ -1,0 +1,44 @@
+.section{
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    justify-content: space-between;
+}
+.border {
+    border: 3px dotted violet;
+}
+.left_Side{
+    width: 10%;
+    height: 20%;
+    display: flex;
+    flex-direction: column;
+
+}
+
+.top_middle_bottom_side{
+    width: 75%;
+    height: 20%;
+    display: flex;
+    flex-direction: column;
+   
+}
+
+.right_side{
+    width: 10%;
+    height: 20%;
+    display: flex;
+    flex-direction: column;
+}
+
+.addModule{
+    background-color: #19d873;
+    width: 20px;
+    height: 20px;
+}
+.tesf{
+    width: 170px;
+    height: 100px;
+    display: flex;
+    flex-direction: row;
+    border: 1px solid red;
+}
