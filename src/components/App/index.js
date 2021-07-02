@@ -41,7 +41,6 @@ function App() {
                     <div className="item_box">
                       {
                         tagElement.map((el, index) => {
-                          console.log(index)
                           return (
                             <ItemForm id={`card-${index}`} className="card" draggable={true} key={index}>
                                 <Element type={el} />
