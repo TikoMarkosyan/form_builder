@@ -121,10 +121,7 @@ function FormBuilder(props){
       e.preventDefault();
     }
       
-      console.log(domTree);
-      console.log(grid);
-      console.log(toggleModule);
-      const auto = new Array(grid[0].length).fill("auto")
+    const auto = new Array(grid[0].length).fill("auto");
     return (
         <>
           <Module showModal={toggleModule} openCloseModule={openCloseModule} domTree={domTree} elementId={elementId} save={newAttributesSave}/>
