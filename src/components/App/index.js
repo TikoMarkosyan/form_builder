@@ -22,6 +22,7 @@ function App() {
       dom.forEach(element => {
         element.props.children.pop();
       });
+    
       const finnalyVerson =  grid.map((cols,indexI) =>{
          return cols.map((item,IndexJ) => {
             const className = indexI+"J"+IndexJ;
@@ -31,7 +32,8 @@ function App() {
                 return React.createElement("div",{id:indexI+"J"+IndexJ,className:"testf",key:className})
               }
           })
-      })
+      });
+    
       setDom(finnalyVerson);
       history.push("/form");
   }
