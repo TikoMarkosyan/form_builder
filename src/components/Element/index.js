@@ -15,18 +15,20 @@ function Element(props) {
                               className={"Defult_textarea"} 
                               placeholder={"textArea"} 
                               rows="3" cols="14"></textarea>  
-       case "select":
+        case "select":
            return (
             <select name="select">
-                    <option value="value1">select #1</option>
-                    <option value="value2">select #2</option>
+                    <option value="select1">select1</option>
+                    <option value="select2">select2</option>
             </select>
            )
         case "radio":
             return (
                 <div name="radio">
                     <input type="radio" id="html" name="radio" value="radio#1" />
+                    <label htmlFor="radio"> yes</label><br/>
                     <input type="radio" id="html" name="radio" value="radio#2" />
+                    <label htmlFor="radio">no</label><br/>
                 </div>
             )
         case "checkbox":

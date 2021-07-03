@@ -7,7 +7,7 @@ import Module from "../Module";
 import '../FormBuilder/formBuilder.css'
 
 
-function FormBuilder(props){
+function FormBuilder(props) {
 
     const [domTree, setDomTree]  = useState([]);
     const [toggleModule,setToggleModule] = useState(false);
@@ -16,9 +16,6 @@ function FormBuilder(props){
                                       ["","",""],
                                       ["","",""]])
 
-
-
-    // end this func
     
     const openCloseModule = (domElement = "") => {
         setElementId(domElement);
@@ -31,21 +28,27 @@ function FormBuilder(props){
         return dom;
     };
 
-    const newAttributesSave = (attributes,elementId) => {
+    const newAttributesSave = (attributes,elementId,items) => {
       const dom = [...domTree];
       const newGrid = [...grid];
       const elementIndex = elementId;
-      const domre = document.getElementsByClassName(elementId);
+      const domRe = document.getElementsByClassName(elementId);
 
       const [indexI,indexJ] = elementIndex.split(" ")[1].split("J");
       
       const test = stringToHTML(grid[+indexI][+indexJ]);
-
       Object.entries(attributes).forEach( ( [key,value] ) => {
         test.firstChild.setAttribute(key,value);
       });
 
-      domre[0].replaceChild(test.firstChild,domre[0].firstChild);
+      domRe[0].replaceChild(test.firstChild,domRe[0].firstChild);
+
+      if(items.length > 0){
+        domRe[0].firstChild.innerHTML = "";
+        items.forEach(el => {
+          domRe[0].firstChild.appendChild(el);
+        })
+      }
 
       const domIndex = domTree.findIndex((element,index) => {
         return element.props.className === elementId
@@ -55,16 +58,17 @@ function FormBuilder(props){
         return null;
       }
     
-      dom[domIndex] =  parse(domre[0].parentNode.innerHTML);
-      newGrid[+indexI][+indexJ] = domre[0].innerHTML;
+      dom[domIndex] =  parse(domRe[0].parentNode.innerHTML);
+      newGrid[+indexI][+indexJ] = domRe[0].innerHTML;
 
       setDomTree(dom);
       setgrid(newGrid);
       setToggleModule(prevState => !prevState);
+      setElementId("");
 
     }
+
     const addMatrixArea = (newGrid,indexI,indexJ) => {
-     
       if(indexI === newGrid.length-1){
           newGrid.push(new Array(newGrid[indexI].length).fill(""));
       }
@@ -75,8 +79,8 @@ function FormBuilder(props){
       }
       return newGrid;
     }
-    const drop = (e,el) => {
-      
+
+    const drop = (e) => {
       e.preventDefault();
       const card_id = e.dataTransfer.getData('card_id');
 
@@ -87,13 +91,18 @@ function FormBuilder(props){
       const [indexI,indexJ] = e.target.getAttribute("id").split("J");
       const newgrid = [...grid]
       newgrid[+indexI][+indexJ] = card.innerHTML;
+
       const resGrid = addMatrixArea(newgrid,+indexI,+indexJ);
+
       const button = document.createElement('button');
+      button.setAttribute("id","btn");
       button.innerText = "+";
       button.onclick = () => { openCloseModule(uniq_id) }
 
       card.style.display = "block";
-
+      if(e.target.childNodes.length > 0){
+        return null;
+      }
       e.target.appendChild(card);
       setDomTree([...domTree, parse(e.target.innerHTML)]);       
       setgrid(resGrid); 
@@ -121,28 +130,27 @@ function FormBuilder(props){
       e.preventDefault();
     }
       
-      console.log(domTree);
-      console.log(grid);
-      console.log(toggleModule);
-      const auto = new Array(grid[0].length).fill("auto")
+
+    const auto = new Array(grid[0].length).fill("auto");
+
     return (
-        <>
-          <Module showModal={toggleModule} openCloseModule={openCloseModule} domTree={domTree} elementId={elementId} save={newAttributesSave}/>
-          <div className={props.className} id={props.id} style={{"gridTemplateColumns" : auto.join(" ")}}  onDrop={(e)=>{drop(e,this)}}  
-          onDragLeave={(e)=> {dragLeave(e)}} onDragEnter={dragEnter} onDragOver={dragOver}>
-              {
-                grid.map((el,indexI) => {
-                  return el.map((item,IndexJ) => {
-                      return (
-                        <div  className="tesf" id={indexI+"J"+IndexJ} key={indexI+""+IndexJ}></div>
-                      )
-                    })                  
-                })
+      <>
+        <Module showModal={toggleModule} openCloseModule={openCloseModule}
+                domTree={domTree} elementId={elementId} save={newAttributesSave}/>
+        <div className={props.className} id={props.id} style={{"gridTemplateColumns" : auto.join(" ")}} 
+             onDrop={(e)=>{drop(e)}} onDragLeave={(e)=> {dragLeave(e)}} onDragEnter={dragEnter} onDragOver={dragOver}>
+                {
+                  grid.map((el,indexI) => {
+                    return el.map((item,IndexJ) => {
+                        return (
+                          <div  className="tesf" id={indexI+"J"+IndexJ} key={indexI+""+IndexJ}></div>
+                        )
+                      })                  
+                  })
                 }
-              <button onClick={() => {props.ClearHtmlCode(domTree,grid)}}>save</button>
-          </div>
-        </>
+                <button onClick={() => {props.ClearHtmlCode(domTree,grid)}}>save</button>
+        </div>
+      </>
     );
 }
 export default FormBuilder;
-
