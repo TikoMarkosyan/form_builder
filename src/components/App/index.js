@@ -20,18 +20,21 @@ function App() {
   
   const ClearHtmlCode = (dom,grid) => {
       dom.forEach(element => {
-        element.props.children.pop();
+          element.props.children.pop();
       });
+
       const finnalyVerson =  grid.map((cols,indexI) =>{
          return cols.map((item,IndexJ) => {
-            const className = indexI+"J"+IndexJ;
+              const className = indexI+"J"+IndexJ;
+              
               if(dom.some(el => el.props.className.includes(className))){
-                return React.createElement("div", {id:className,className:"testf",key:className}, dom.find(elem => elem.props.className.includes(className)))
+                return React.createElement("div", {id:className,className:"testf",key:className}, dom.find(elem => elem.props.className.includes(className)));
               }else{
-                return React.createElement("div",{id:indexI+"J"+IndexJ,className:"testf",key:className})
+                return React.createElement("div",{id:indexI+"J"+IndexJ,className:"testf",key:className});
               }
-          })
-      })
+          });
+      });
+
       setDom(finnalyVerson);
       history.push("/form");
   }
@@ -40,14 +43,17 @@ function App() {
     <Switch>
         <Route exact path="/">
             <div>
-              <div className="flexbox">
+              <div className="flexBox">
                     <div className="item_box">
                       {
                         tagElement.map((el, index) => {
                           return (
-                            <ItemForm id={`card-${index}`} className="card" draggable={true} key={index}>
-                                <Element type={el} />
-                            </ItemForm>
+                            <div key={index}>
+                              <p>{el}</p>
+                              <ItemForm id={`card-${index}`} className="card" draggable={true} key={index}>
+                                  <Element type={el} />
+                              </ItemForm>
+                            </div>
                           )
                         })
                       }

@@ -16,7 +16,7 @@ function Module(props) {
         {nameTag:"radio", id:"", name:"",checked:["false","true"],value:"",disabled:""},
         {nameTag:"checkbox", id:"", name:"",checked:["false","true"],value:"",disabled:""},
         {nameTag:"div", id:"", name:"",checked:["false","true"],value:"",disabled:""}
-    ]
+    ];
  
     useEffect(() => {
         setOptions([]);

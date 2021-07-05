@@ -35,7 +35,7 @@ function FormBuilder(props) {
       const domRe = document.getElementsByClassName(elementId);
 
       const [indexI,indexJ] = elementIndex.split(" ")[1].split("J");
-      
+      console.log(indexI);
       const test = stringToHTML(grid[+indexI][+indexJ]);
       Object.entries(attributes).forEach( ( [key,value] ) => {
         test.firstChild.setAttribute(key,value);
@@ -148,7 +148,7 @@ function FormBuilder(props) {
                       })                  
                   })
                 }
-                <button onClick={() => {props.ClearHtmlCode(domTree,grid)}}>save</button>
+                <button className="buttonSave" onClick={() => {props.ClearHtmlCode(domTree,grid)}}>save</button>
         </div>
       </>
     );
