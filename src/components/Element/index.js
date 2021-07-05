@@ -25,19 +25,27 @@ function Element(props) {
         case "radio":
             return (
                 <div name="radio">
-                    <input type="radio" id="html" name="radio" value="radio#1" />
-                    <label htmlFor="radio"> yes</label><br/>
-                    <input type="radio" id="html" name="radio" value="radio#2" />
-                    <label htmlFor="radio">no</label><br/>
+                    <div>
+                        <input type="radio" id="html" name="radio" value="radio#1" />
+                        <label htmlFor="radio"> yes</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="html" name="radio" value="radio#2" />
+                        <label htmlFor="radio">no</label>
+                    </div>
                 </div>
             )
         case "checkbox":
             return(
                 <div name="checkbox">
-                    <input type="checkbox" id="vehicle1" name="vehicle1" value="check" />
-                    <label htmlFor="vehicle1"> checkbox</label><br/>
-                    <input type="checkbox" id="vehicle2" name="vehicle2" />
-                    <label htmlFor="vehicle2"> checkbox2</label><br/>
+                    <div>
+                        <input type="checkbox" id="vehicle1" name="vehicle1" value="check" />
+                        <label htmlFor="vehicle1"> checkbox</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="vehicle2" name="vehicle2" />
+                        <label htmlFor="vehicle2"> checkbox2</label>
+                    </div>
                 </div>
             )    
         default: 

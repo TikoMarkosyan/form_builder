@@ -34,7 +34,6 @@ function App() {
               }
           })
       });
-    
       setDom(finnalyVerson);
       history.push("/form");
   }

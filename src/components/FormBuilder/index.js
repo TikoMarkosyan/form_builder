@@ -35,7 +35,6 @@ function FormBuilder(props) {
       const domRe = document.getElementsByClassName(elementId);
 
       const [indexI,indexJ] = elementIndex.split(" ")[1].split("J");
-      console.log(indexI);
       const test = stringToHTML(grid[+indexI][+indexJ]);
       Object.entries(attributes).forEach( ( [key,value] ) => {
         test.firstChild.setAttribute(key,value);
@@ -98,18 +97,19 @@ function FormBuilder(props) {
       button.setAttribute("id","btn");
       button.innerText = "+";
       button.onclick = () => { openCloseModule(uniq_id) }
-
+      card.appendChild(button);
+  
       card.style.display = "block";
       if(e.target.childNodes.length > 0){
         return null;
       }
+      
       e.target.appendChild(card);
       setDomTree([...domTree, parse(e.target.innerHTML)]);       
       setgrid(resGrid); 
-      card.appendChild(button);
 
     } 
-    
+
     const dragEnter = ( e ) => {
       if(e.target.className === "section border" || e.target.className === "section"){
           e.target.childNodes.forEach(element => {

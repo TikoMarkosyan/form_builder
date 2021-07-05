@@ -1,5 +1,6 @@
 import React, {  useState,useEffect } from 'react';
 import Modal from 'react-modal';
+import { isArray } from 'lodash';
 import uuid from 'react-uuid'
 import '../App/main.css'
 
@@ -13,7 +14,7 @@ function Module(props) {
         {nameTag:"text",id:"", title:"",value:"",type:["button", "email", "file", "number","password", "submit", "text","radio","checkbox"],  autofocus:["false","true"],disabled:["false","true"], placeholder:"",name:"",min:0,max:0 },
         {nameTag:"textarea", id:"",value:"", autofocus:["false","true"],disabled:["false","true"], placeholder:"", name:"", rows:0, wrap:0 },
         {nameTag:"select", id:"",multiple:["false","true"], autofocus:["false","true"],disabled:["false","true"],name:"",options: ["",""]},
-        {nameTag:"radio", id:"", name:"",checked:["false","true"],value:"",disabled:""},
+        {nameTag:"radio", id:"", name:"",checked:["false","true"],value:"",disabled:"",options: ["",""]},
         {nameTag:"checkbox", id:"", name:"",checked:["false","true"],value:"",disabled:""},
         {nameTag:"div", id:"", name:"",checked:["false","true"],value:"",disabled:""}
     ];
@@ -21,13 +22,8 @@ function Module(props) {
     useEffect(() => {
         setOptions([]);
         const element = findElementNode();
-        if(element !== undefined && element.props.children.type === "select"){
-            for(let i =0; i<2; i++){
-                const option = document.createElement("option");
-                option.innerText = `select${i}`;
-                option.value = `select${i}`
-                setOptions([...options,option]);
-            }
+        if(element !== undefined){
+            newOrAddElement(element,"new");
         }
     },[props]);
 
@@ -40,10 +36,13 @@ function Module(props) {
 
     const newAtributeSelect = (key,value,index) => {
         const newItem = [...options];
-        newItem[index].value = value;
-        newItem[index].innerText = value;
-        console.log(newItem[index].innerText);
-        setOptions(newItem);
+        if(key === "checked"){
+            newItem[index].lastChild.innerText = value;
+        }else{
+            newItem[index].value = value;
+            newItem[index].innerText = value;
+        }
+            setOptions(newItem);
     }
 
     const showInputAtribute = (key,index) => {
@@ -56,14 +55,15 @@ function Module(props) {
     }
 
     const showSelectAtribute =  (key,value,index) => {
-        if( key === "options" ){
+
+        if( key === "options" || key === "checked"){
             return (
                 <div key={index}>
                     {
                         options.map((e, index) => {
                             return (
                                 <div key={"options"+index}>
-                                    <p>{ "Option " + index }</p>
+                                    <p>{ key + " " + index }</p>
                                     <input type="text" value={options[index].value} onChange={((e) => {newAtributeSelect(key,e.target.value,index)})}/>
                                 </div>
                             )
@@ -87,15 +87,49 @@ function Module(props) {
         )
     }
 
-    const whitchElement = (attributeTagName,elementTagName) => {
-        if(elementTagName === "button" || elementTagName === "text" || elementTagName === "textarea"){
-            return  attributeTagName === elementTagName;
-        } 
-        return attributeTagName === elementTagName;    
+    const addItem = (element) => {
+        newOrAddElement(element,"old");
     }
 
-    const addItem = () => {
-        setOptions([...options,document.createElement("option")]);
+    const newOrAddElement = (element, which) => {
+        if(isArray(element.props.children)){
+            if(element.props.children[0].props.name !== "select"){
+                updateOptions(element.props.children[0].props.name);
+            }else{
+                which === "new" ? createOption() :  setOptions([...options,document.createElement("option")]);
+            }
+        }else{
+            if(element.props.children.props.name === "select"){
+                which === "new" ? createOption() :  setOptions([...options,document.createElement("option")]);
+            }else{
+                for(let i =0; i<2; i++){
+                    updateOptions(element.props.children.props.name);
+                }
+            }
+        }
+    }
+    const updateOptions = (objectElement) => {
+       const div =  createRadioAndCheckBox(objectElement);
+        setOptions([...options,div]); 
+    }
+
+    const createRadioAndCheckBox = (type) => {
+        const div = document.createElement("div");
+        const label = document.createElement("label");
+        const input = document.createElement("input");
+        input.setAttribute("type", `${type}`);
+        div.appendChild(input);
+        div.appendChild(label);
+        div.setAttribute("name", type);
+        return div;
+    }
+    const createOption = () => {
+        for(let i =0; i<2; i++){
+            const option = document.createElement("option");
+            option.innerText = `select${i}`;
+            option.value = `select${i}`
+            setOptions([...options,option]);
+        }
     }
 
     const findElementNode = () => {
@@ -111,14 +145,14 @@ function Module(props) {
 
         const result =  attributes.find(el => {
             if( res.props.children.type !== undefined ) {
-                return whitchElement(el.nameTag,res.props.children.type); 
+                return el.nameTag === res.props.children.type;
             } else if( res.props.children.type === undefined ) {
-                return whitchElement(el.nameTag,res.props.children[0].type);  
+                return  el.nameTag === res.props.children[0].type;  
             } else {
-                return whitchElement(el.nameTag,res.props.children.props.type)
+                return  el.nameTag === res.props.children.props.type;
             }
         })
-       
+
         return (
             <div>
                 {
@@ -136,11 +170,11 @@ function Module(props) {
                         return showInputAtribute(key,index);
                     })
                 }
-                {result.nameTag === "select" ? <button onClick={addItem}>add</button> : null}
+                {(result.nameTag === "select" || result.nameTag === "div" ) ? <button onClick={() => { addItem(res) } }>add</button> : null}
             </div>
         )
     }
-    
+
     return (
         <Modal 
             isOpen={props.showModal}
