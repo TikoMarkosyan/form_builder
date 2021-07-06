@@ -79,7 +79,7 @@ function FormBuilder(props) {
       return newGrid;
     }
 
-    const drop = (e) => {
+    const drop =  (e) => {
       e.preventDefault();
       const card_id = e.dataTransfer.getData('card_id');
 
@@ -98,6 +98,11 @@ function FormBuilder(props) {
       button.innerText = "+";
       button.onclick = () => { openCloseModule(uniq_id) }
       card.appendChild(button);
+      const removebutton = document.createElement('button');
+      removebutton.innerText = "r";
+      removebutton.onclick = () => { remove() }
+      card.appendChild(button);
+      card.appendChild(removebutton);
   
       card.style.display = "block";
       if(e.target.childNodes.length > 0){
@@ -105,11 +110,15 @@ function FormBuilder(props) {
       }
       
       e.target.appendChild(card);
+      console.log(domTree)
       setDomTree([...domTree, parse(e.target.innerHTML)]);       
       setgrid(resGrid); 
 
     } 
-
+    const remove = () => {
+      console.log("fvsd");
+      console.log(domTree)
+    }
     const dragEnter = ( e ) => {
       if(e.target.className === "section border" || e.target.className === "section"){
           e.target.childNodes.forEach(element => {
@@ -119,6 +128,7 @@ function FormBuilder(props) {
     }
 
     const dragLeave = (e) => {
+      console.log(domTree)
       if(e.target.className === "board"){
           e.target.childNodes.forEach(element => {
              element.classList.remove("border");
@@ -132,7 +142,7 @@ function FormBuilder(props) {
       
 
     const auto = new Array(grid[0].length).fill("auto");
-
+    console.log(domTree);
     return (
       <>
         <Module showModal={toggleModule} openCloseModule={openCloseModule}
