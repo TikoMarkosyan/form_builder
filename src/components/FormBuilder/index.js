@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 
 import parse from 'html-react-parser';
 import Module from "../Module";
@@ -10,13 +9,16 @@ import '../FormBuilder/formBuilder.css'
 function FormBuilder(props) {
 
     const [domTree, setDomTree]  = useState([]);
+    const [remove,setRemove] = useState("");
     const [toggleModule,setToggleModule] = useState(false);
     const [elementId,setElementId] = useState("");
     const [grid, setgrid] = useState([["","",""],
                                       ["","",""],
                                       ["","",""]])
 
-    
+    useEffect(() => {
+         removeDom();
+    },[remove])
     const openCloseModule = (domElement = "") => {
         setElementId(domElement);
         setToggleModule(prevState => !prevState);
@@ -79,6 +81,27 @@ function FormBuilder(props) {
       return newGrid;
     }
 
+    const removeElement = (uniq_id,card) => {
+      setRemove(uniq_id);
+      card.innerHTML = "";
+    }
+
+    const removeDom = () => {
+      const dom = [...domTree];
+      const newGrid = [...grid];
+      if(remove !== ""){
+        const [indexI,indexJ] = remove.split("J");
+        newGrid[indexI][indexJ] = "";
+      }
+      dom.forEach((el,index,obj) => {
+        if (el.props.className.includes(remove)) {
+          obj.splice(index, 1);
+        }
+      })
+      setDomTree(dom);
+      setgrid(newGrid);
+    }
+
     const drop = (e) => {
       e.preventDefault();
       const card_id = e.dataTransfer.getData('card_id');
@@ -93,12 +116,12 @@ function FormBuilder(props) {
 
       const resGrid = addMatrixArea(newgrid,+indexI,+indexJ);
 
-      const button = document.createElement('button');
-      button.setAttribute("id","btn");
-      button.innerText = "+";
-      button.onclick = () => { openCloseModule(uniq_id) }
-      card.appendChild(button);
-  
+      const div = document.createElement('div');
+      const button = createButton("btn","+",()=>{ openCloseModule(uniq_id) } )
+      const removebtn = createButton("btn2","X",()=>{ removeElement(e.target.getAttribute("id"),e.target) } )
+      div.appendChild(button);
+      div.appendChild(removebtn);
+      card.appendChild(div);
       card.style.display = "block";
       if(e.target.childNodes.length > 0){
         return null;
@@ -109,7 +132,13 @@ function FormBuilder(props) {
       setgrid(resGrid); 
 
     } 
-
+    const createButton = (id,text,method) => {
+      const button = document.createElement('button');
+      button.setAttribute("id",id);
+      button.innerText = text;
+      button.onclick = method;
+      return button;
+    }
     const dragEnter = ( e ) => {
       if(e.target.className === "section border" || e.target.className === "section"){
           e.target.childNodes.forEach(element => {
